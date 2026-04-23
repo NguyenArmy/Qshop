@@ -1,0 +1,26 @@
+{
+  "name": "@qshop/QShop-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@qshop/QShop"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/QShop-e2e/jest.config.cts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@qshop/QShop:build",
+          "@qshop/QShop:serve"
+        ]
+      }
+    }
+  }
+}
