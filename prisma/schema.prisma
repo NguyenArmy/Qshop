@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+}
+
+model Images {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  url     String
+  file_id String
+  userId  String? @unique @db.ObjectId
+  users   users?  @relation(fields: [userId], references: [id])
+}
+
+model users {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  password  String? // để là tuỳ chọn vì người dùng có thể login/register bằng phương pháp khác như Google, Facebook, ...
+  avatar    Images? //Url ảnh đại diện của người dùng
+  following String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
