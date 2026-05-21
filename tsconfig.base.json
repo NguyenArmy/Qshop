@@ -16,6 +16,11 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@qshop/source"]
+    "customConditions": ["@qshop/source"],
+    "baseUrl": ".",
+    "paths": {
+      "@packages/*": ["packages/*"],
+      "@qshop/*": ["apps/QShop/src/*"]
+    }
   }
 }

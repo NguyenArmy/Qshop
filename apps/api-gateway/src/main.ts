@@ -34,7 +34,6 @@ const limiter = rateLimit({
   message: { error: "Quá nhiều yêu cầu, vui lòng thử lại sau 15 phút.  " },
   standardHeaders: true,
   legacyHeaders: true,
-  keyGenerator: (req: any) => req.ip,
 });
 app.use(limiter);
 
