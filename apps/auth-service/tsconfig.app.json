@@ -6,7 +6,12 @@
       "node"
     ],
     "rootDir": "../../",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo"
+    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "baseUrl": "../../",
+    "paths": {
+      "@packages/*": ["packages/*"],
+      "@/*": ["apps/auth-service/src/*"]
+    }
   },
   "include": [
     "src/**/*.ts",

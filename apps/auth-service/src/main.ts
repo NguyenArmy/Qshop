@@ -5,7 +5,7 @@ import { errorMiddleware } from '@packages/error-handler/error-middleware';
 import cookieParser from 'cookie-parser';
 import router from './routes/auth.router';
 import swaggerUi from 'swagger-ui-express';
-const swaggerDoc = require("../swagger.json");
+const swaggerDoc = require("./swagger-output.json");
 
 
 

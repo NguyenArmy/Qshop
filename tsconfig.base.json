@@ -20,7 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "@packages/*": ["packages/*"],
-      "@qshop/*": ["apps/QShop/src/*"]
+      "@/*": ["apps/auth-service/src/*"]
     }
   }
 }

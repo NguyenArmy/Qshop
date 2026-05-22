@@ -16,7 +16,8 @@
           "format": [
             "cjs"
           ],
-          "bundle": false,
+          "bundle": true,
+          "thirdParty": false,
           "main": "apps/QShop/src/main.ts",
           "tsConfig": "apps/QShop/tsconfig.app.json",
           "assets": [
@@ -85,7 +86,8 @@
         ],
         "options": {
           "buildTarget": "@qshop/QShop:build",
-          "runBuildTargetDependencies": false
+          "runBuildTargetDependencies": false,
+          "port": 9230
         },
         "configurations": {
           "development": {
