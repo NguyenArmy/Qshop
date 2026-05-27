@@ -38,7 +38,7 @@ const port = process.env.PORT || 6001;
 const server = app.listen(port, () => {
   console.log(`Auth service is running on port ${port}`);
 
-  console.log(`swagger docs available at http://localhost:${port}/docs`)
+  console.log(`swagger docs available at http://localhost:${port}/api-docs`)
 
 })
 server.on("error", (error) => {

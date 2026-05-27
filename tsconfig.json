@@ -4,13 +4,13 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/QShop-e2e"
-    },
-    {
-      "path": "./apps/QShop"
-    },
-    {
       "path": "./apps/api-gateway"
+    },
+    {
+      "path": "./apps/auth-service-e2e"
+    },
+    {
+      "path": "./apps/auth-service"
     }
   ]
 }

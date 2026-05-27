@@ -1,10 +1,10 @@
 {
-  "name": "@qshop/QShop-e2e",
+  "name": "@qshop/auth-service-e2e",
   "version": "0.0.1",
   "private": true,
   "nx": {
     "implicitDependencies": [
-      "@qshop/QShop"
+      "@qshop/auth-service"
     ],
     "targets": {
       "e2e": {
@@ -13,12 +13,12 @@
           "{projectRoot}/test-output/jest/coverage"
         ],
         "options": {
-          "jestConfig": "apps/QShop-e2e/jest.config.cts",
+          "jestConfig": "apps/auth-service-e2e/jest.config.cts",
           "passWithNoTests": true
         },
         "dependsOn": [
-          "@qshop/QShop:build",
-          "@qshop/QShop:serve"
+          "@qshop/auth-service:build",
+          "@qshop/auth-service:serve"
         ]
       }
     }

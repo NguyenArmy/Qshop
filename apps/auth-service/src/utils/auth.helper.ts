@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { ValidationError } from "@packages/error-handler";
 import redis from "@packages/libs/redis";
-import { sendEmail } from "@qshop/utils/sendMail";
+import { sendEmail } from "./sendMail";
 import { NextFunction } from "express";
 
 
@@ -55,3 +55,34 @@ export const sendOtp = async (name: string, email: string, template: string) => 
 
 
 }
+export const verifyOtp = async (email: string, otp: string, next: NextFunction) => {
+  const storedOtp = await redis.get(`otp${email}`);
+  if(!storedOtp){
+    return next(new ValidationError("Invalid or expired OTP!"))
+  
+  
+  } 
+  const failedAttemptsKey =`otp_attempts:${email}`;
+  const failedAttempts = parseInt((await redis.get(failedAttemptsKey))|| "0");
+  if(storedOtp !== otp){
+    if(failedAttempts >= 2){
+      await redis.set(`otp_lock:${email}`, "locked", "EX", 1800) //lock for 30 minutes
+      await redis.del(`otp:${email}`, failedAttemptsKey)
+      
+      
+      return next(new ValidationError("Account locked due to multiple faild attempts! Try again after 30 minutes"))
+    }
+  
+  await redis.set(failedAttemptsKey, failedAttempts +1, "EX", 300)
+return next(new ValidationError(`Invalid OTP. ${2 -failedAttempts} attempts left.`))
+}
+
+  
+
+
+  await redis.del(`otp:${email}`, failedAttemptsKey)
+    }
+    
+
+  
+

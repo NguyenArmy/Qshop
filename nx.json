@@ -40,7 +40,7 @@
         "targetName": "test"
       },
       "exclude": [
-        "apps/QShop-e2e/**/*"
+        "apps/auth-service-e2e/**/*"
 
       ]
     },

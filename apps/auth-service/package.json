@@ -1,5 +1,5 @@
 {
-  "name": "@qshop/QShop",
+  "name": "@qshop/auth-service",
   "version": "0.0.1",
   "private": true,
   "nx": {
@@ -12,16 +12,16 @@
         "defaultConfiguration": "production",
         "options": {
           "platform": "node",
-          "outputPath": "apps/QShop/dist",
+          "outputPath": "apps/auth-service/dist",
           "format": [
             "cjs"
           ],
           "bundle": true,
           "thirdParty": false,
-          "main": "apps/QShop/src/main.ts",
-          "tsConfig": "apps/QShop/tsconfig.app.json",
+          "main": "apps/auth-service/src/main.ts",
+          "tsConfig": "apps/auth-service/tsconfig.app.json",
           "assets": [
-            "apps/QShop/src/assets"
+            "apps/auth-service/src/assets"
           ],
           "esbuildOptions": {
             "sourcemap": true,
@@ -50,8 +50,8 @@
         "cache": true,
         "executor": "@nx/js:prune-lockfile",
         "outputs": [
-          "{workspaceRoot}/apps/QShop/dist/package.json",
-          "{workspaceRoot}/apps/QShop/dist/package-lock.json"
+          "{workspaceRoot}/apps/auth-service/dist/package.json",
+          "{workspaceRoot}/apps/auth-service/dist/package-lock.json"
         ],
         "options": {
           "buildTarget": "build"
@@ -63,7 +63,7 @@
         ],
         "cache": true,
         "outputs": [
-          "{workspaceRoot}/apps/QShop/dist/workspace_modules"
+          "{workspaceRoot}/apps/auth-service/dist/workspace_modules"
         ],
         "executor": "@nx/js:copy-workspace-modules",
         "options": {
@@ -85,16 +85,16 @@
           "build"
         ],
         "options": {
-          "buildTarget": "@qshop/QShop:build",
+          "buildTarget": "@qshop/auth-service:build",
           "runBuildTargetDependencies": false,
           "port": 9230
         },
         "configurations": {
           "development": {
-            "buildTarget": "@qshop/QShop:build:development"
+            "buildTarget": "@qshop/auth-service:build:development"
           },
           "production": {
-            "buildTarget": "@qshop/QShop:build:production"
+            "buildTarget": "@qshop/auth-service:build:production"
           }
         }
       },
