@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   service: process.env.SMTP_SERVICE,
   auth: {
     user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSW,
+    pass: process.env.SMTP_PASS,
   },
 });
 
@@ -20,6 +20,7 @@ const transporter = nodemailer.createTransport({
 export const renderEmailTemplate = async (templateName: string, data: Record<string, any>): Promise<string> => {
   const templatePath = path.join(
     process.cwd(),
+    "apps",
     "auth-service",
     "src",
     "utils",

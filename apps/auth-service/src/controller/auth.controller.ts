@@ -22,7 +22,7 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
     await checkOtpRestrictions(email, next);
     await trackOtpRequests(email, next);
 
-    await sendOtp(email, name, "user-activation-mail");
+    await sendOtp(name, email, "user-activation-mail");
     res.status(200).json({ message: "Otp has been sent to your email" });
     
 
@@ -40,12 +40,13 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
 
 
 //verify user with otp
+//cần theo dỗi vì chưa tách lỗi ra rõ vì tôi cần lỗi OTP phải có thong báo ri
 export const verifyUser = async(req:Request, res:Response, next:NextFunction)=>{
 
   try {
     const {email, otp, password, name} = req.body;
     if(!email || !otp || !password || !name){
-      return next(new ValidationError("All fields are required!"));
+      return next(new ValidationError("all the input fields are required!"));
     }
     await verifyOtp(email, otp, next)
     const hashPassword = await bcrypt.hash(password, 10);
