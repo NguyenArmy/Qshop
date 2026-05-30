@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { checkOtpRestrictions, sendOtp, trackOtpRequests, validationRegistrationData, verifyOtp } from "@/utils/auth.helper";
 import prisma from "@packages/libs/prisma";
-import { ValidationError } from "@packages/error-handler";
+import { AuthError, ValidationError } from "@packages/error-handler";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { setCookie } from "@/utils/cookies/setCookie";
 
 
 
@@ -40,9 +42,8 @@ export const userRegister = async (req: Request, res: Response, next: NextFuncti
 
 
 //verify user with otp
-//cần theo dỗi vì chưa tách lỗi ra rõ vì tôi cần lỗi OTP phải có thong báo ri
-export const verifyUser = async(req:Request, res:Response, next:NextFunction)=>{
 
+export const verifyUser = async(req:Request, res:Response, next:NextFunction)=>{
   try {
     const {email, otp, password, name} = req.body;
     if(!email || !otp || !password || !name){
@@ -67,3 +68,49 @@ export const verifyUser = async(req:Request, res:Response, next:NextFunction)=>{
   }
 }
 
+//login user
+export const loginUser = async(req: Request, res: Response, next: NextFunction)=>{
+  try {
+    const {email,password} = req.body;
+    if(!email || !password){
+      return next(new ValidationError("Email or password are required!"))
+    }
+
+    const user = await prisma.users.findUnique({
+      where:{email}
+    })
+    if (!user){
+      return next(new AuthError("User doesn't exist!"))
+    }
+    //verify password
+
+    const isMatch = await bcrypt.compare(password, user.password!);
+    if(!isMatch){
+      return next(new AuthError("invalid email or password"))
+    }
+
+    //generate access token and refresh token
+    
+    //access token 15 phut
+    const accessToken = jwt.sign({id: user?.id, role:"user"}, process.env.ACCESS_TOKEN_SECRET as string,{expiresIn: "15m"})
+    //refresh token 7 ngay
+    const refreshToken = jwt.sign({id: user?.id, role:"user"}, process.env.REFRESH_TOKEN_SECRET as string,{expiresIn: "7d"})
+
+    //store the refresh and access token in an httpOnly secure cookie
+    setCookie(res, "refresh_token", refreshToken);
+    setCookie(res, "access_token", accessToken);
+
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfully!",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      }
+    });
+     
+  } catch (error) {
+    return next(error)
+  }
+}

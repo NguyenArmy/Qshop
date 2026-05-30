@@ -13,82 +13,87 @@
   "paths": {
     "/user-registration": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Register a new user",
         "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
-            "description": "Registration credentials.",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "type": "string",
-                  "example": "Jonny đéc"
+                  "example": "any"
                 },
                 "email": {
-                  "type": "string",
-                  "example": "john@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "password123"
+                  "example": "any"
                 }
               }
             }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
           }
         }
       }
     },
     "/verify-registration": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Verify user registration with OTP",
         "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
-            "description": "Verification credentials.",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "John Doe"
-                },
                 "email": {
-                  "type": "string",
-                  "example": "john@example.com"
+                  "example": "any"
                 },
                 "otp": {
-                  "type": "string",
-                  "example": "1234"
+                  "example": "any"
                 },
                 "password": {
-                  "type": "string",
-                  "example": "password123"
+                  "example": "any"
+                },
+                "name": {
+                  "example": "any"
                 }
               }
             }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
