@@ -1,12 +1,14 @@
 import express, { Router } from "express";
-import { loginUser, userRegister, verifyUser } from "../controller/auth.controller";
+import { loginUser, resetUserPassword, userForgotPassword, userRegister, verifyUser } from "../controller/auth.controller";
+import { verifyForgotPasswordOtp } from "@/utils/auth.helper";
 
 const router: Router = express.Router();
 
 router.post("/user-registration", userRegister);
-router.post("/verify-registration", verifyUser);
-router.post("/login", loginUser);
-
-
+router.post("/verify-user", verifyUser);
+router.post("/login-user", loginUser);
+router.post("/forgot-password-user", userForgotPassword);
+router.post("/reset-password-user", resetUserPassword)
+router.post("/verify-forgot-password-user", verifyForgotPasswordOtp)
 
 export default router;

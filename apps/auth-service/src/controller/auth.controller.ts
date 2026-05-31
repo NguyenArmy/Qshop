@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { checkOtpRestrictions, sendOtp, trackOtpRequests, validationRegistrationData, verifyOtp } from "@/utils/auth.helper";
+import { checkOtpRestrictions, handleForgotPassword, sendOtp, trackOtpRequests, validationRegistrationData, verifyOtp } from "@/utils/auth.helper";
 import prisma from "@packages/libs/prisma";
 import { AuthError, ValidationError } from "@packages/error-handler";
 import bcrypt from "bcryptjs";
@@ -112,5 +112,66 @@ export const loginUser = async(req: Request, res: Response, next: NextFunction)=
      
   } catch (error) {
     return next(error)
+  }
+}
+
+
+//user quen password
+export const userForgotPassword = async(req: Request, res: Response, next: NextFunction) => {
+  
+await handleForgotPassword(req, res, next, "user");
+
+
+}
+
+//verify forgot password otp
+// export const verifyForgotPassword = async(req: Request, res: Response, next: NextFunction) => {
+//   try {
+
+//     await 
+
+    
+//   } catch (error) {
+    
+//   }
+// } 
+
+
+
+//reset user password
+export const resetUserPassword = async(req: Request, res: Response, next: NextFunction) => {
+  try {
+
+    const {email, newPassword} = req.body;
+    if(!email || !newPassword) {
+      return next(new ValidationError("Email or new password are required!"))
+    }
+
+
+    const user = await prisma.users.findUnique({where:{email}})
+    if(!user){
+      return next(new AuthError("User doesn't exist!"))
+    }
+    const isSamePassword = await bcrypt.compare(newPassword, user.password!);
+
+  if(isSamePassword){
+    return next(new ValidationError("new password cannot be the same as the old password!"))
+  }
+
+  //hash the new password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+  await prisma.users.update({
+    where: { email },
+    data: { password: hashedPassword }
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Password reset successfully!"
+  });
+
+  } catch (error) {
+    return next(error);
   }
 }
