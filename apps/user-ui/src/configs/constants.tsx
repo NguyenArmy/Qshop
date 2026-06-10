@@ -1,22 +1,22 @@
 export const navItems:NavItemsTypes[]=[
     {
-        title:"Home",
+        title:"Trang chủ",
         href:"/"
     },
     {
-        title:"Products",
+        title:"Sản phẩm",
         href:"/producsts"
     },
     {
-        title:"Shops",
+        title:"Cửa hàng",
         href:"/shops"
     },
     {
-        title:"Offers",
+        title:"Ưu đãi",
         href:"/offers"
     },
     {
-        title:"Become A Seller",
+        title:"Trở thành người bán hàng",
         href:"/become-seller"
 
     }

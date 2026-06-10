@@ -39,8 +39,8 @@ const Header = () => {
           </Link>
       
         <Link href={"/login"}>
-          <span className="block font-medium">Hello,</span>
-          <span className="font-semibold">Sign in</span>
+          <span className="block font-medium">Xin chào,</span>
+          <span className="font-semibold">Đăng nhập</span>
         </Link>
         </div>
         <div className="flex items-center gap-5">

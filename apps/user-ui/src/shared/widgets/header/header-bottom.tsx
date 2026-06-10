@@ -72,8 +72,8 @@ const HeaderBottom = () => {
                 <ProfileIcon />
               </Link>
               <Link href={"/login"}>
-                <span className="block font-medium">Hello,</span>
-                <span className="font-semibold">Sign in</span>
+                <span className="block font-medium">Xin chào,</span>
+                <span className="font-semibold">Đăng nhập</span>
               </Link>
             </div>
 
@@ -87,7 +87,7 @@ const HeaderBottom = () => {
               <Link href={"/cart"} className="relative inline-flex">
                 <CartIcon/>
                 <div className='w-6 h-6 border-2 border-white bg-red-400 rounded-full flex items-center justify-center absolute top-[-10px] right-[-10px]'>
-                  <span className="text-white font-medium text-sm">9+</span>
+                  <span className="text-white font-medium text-sm">10+</span>
                 </div>
               </Link>
             </div>
