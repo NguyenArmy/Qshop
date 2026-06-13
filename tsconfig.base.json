@@ -17,10 +17,9 @@
     "strict": true,
     "target": "es2022",
     "customConditions": ["@qshop/source"],
-    "baseUrl": ".",
     "paths": {
-      "@packages/*": ["packages/*"],
-      "@/*": ["apps/auth-service/src/*"]
+      "@packages/*": ["./packages/*"],
+      "@/*": ["./apps/auth-service/src/*"]
     }
   }
 }

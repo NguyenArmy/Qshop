@@ -18,7 +18,7 @@ type FormData={
 
 const Signup = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [serverError, setServerError] = useState<string | null>(null);
+
     const [showOtp, setShowOtp] = useState(false);
     const[canResend, setCanResend] = useState(true);
    const [timer, setTimer] = useState(60);
@@ -36,15 +36,15 @@ const Signup = () => {
                 return 0;
             }
             return prev -1;
-           }) 
+           })
 
         },1000);
     }
-    
+
     const signupMutation = useMutation({
         mutationFn: async(data: FormData) => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/user-registration`, data);
-           return response.data; 
+           return response.data;
         },
         onSuccess:(_, formData) =>{
             setUserData(formData);
@@ -53,16 +53,35 @@ const Signup = () => {
             setTimer(60);
           startResendTimer();
         },
-        
-    })
+
+    });
+    const verifyOtpMutation = useMutation({
+        mutationFn: async()=>{
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/verify-user`,
+            {
+                ...userData,
+                otp: otp.join(""),
+            }
+            );
+            return response.data;
+        },
+        onSuccess:()=>{
+            router.push("/login")
+        },
+
+
+    });
     const onSubmit = (data: FormData) =>{
+
+        signupMutation.mutate(data);
+
 
     };
     //xử lý logic mã otp tự chuyển sang ô tiếp theo khi nhập
     const handleOtpChange = (index: number, value: string) => {
         // Cho phép giá trị rỗng "" (khi xóa) hoặc chỉ 1 chữ số từ 0-9
         if (value !== "" && !/^[0-9]$/.test(value)) return;
-    
+
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
@@ -77,17 +96,20 @@ const  handleOtpKeyDown = (index: number, e:React.KeyboardEvent<HTMLInputElement
     }
 }
 const resendOtp=() =>{
+    if(userData) {
+        signupMutation.mutate(userData);
+    }
 
 }
 
 
-    
 
-    
-            
-    
 
- 
+
+
+
+
+
     return (
   <div className="w-full py-10 min-h-[85vh] bg-[#f1f1f1]">
     <h1 className="text-4xl font-Poppins font-semibold text-black text-center">
@@ -126,9 +148,9 @@ const resendOtp=() =>{
                 className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                 {...register("name",{
                     required: "Tên đăng nhập không được để trống",
-                    
+
                 })}
-                
+
                 />
                 {errors.name && (
                     <p className="text-red-500 text-sm">
@@ -148,8 +170,8 @@ const resendOtp=() =>{
                           message: "địa chỉ email không hợp lệ"
                         }
                     })
-                } 
-                
+                }
+
                 />
                 {errors.email && (
                     <p className="text-red-500 text-sm">
@@ -168,7 +190,7 @@ const resendOtp=() =>{
                               message: "Mật khẩu phải có ít nhất 6 kí tự"
                             }
                         })
-                    } 
+                    }
                     />
                     <button type="button" onClick={() => setPasswordVisible(!passwordVisible)}
                         className="absolute right-3 flex items-center text-gray-500"
@@ -182,12 +204,15 @@ const resendOtp=() =>{
                        {String(errors.password.message)}
                     </p>
                 )}
-                
-                <button type="submit" 
+
+                <button type="submit"
                 className="w-full text-lg cursor-pointer mt-4 bg-black text-white py-2 rounded-lg"
-                 >Đăng Kí</button>
-                 {serverError && <p className="text-red-500 text-sm mt-2 text-center">{serverError}</p>}
-             
+                 disabled={signupMutation.isPending}
+                 >
+                 {signupMutation.isPending ? "Đang gửi..." :"Đăng Kí"}
+                 </button>
+
+
             </form>
 
             ) : (
@@ -205,7 +230,7 @@ const resendOtp=() =>{
                             value={digit}
                             onChange = {(e) => handleOtpChange(idx, e.target.value)}
                             onKeyDown = {(e) => handleOtpKeyDown(idx, e)}
-                            
+
                             />
 
                         ))}
@@ -213,8 +238,11 @@ const resendOtp=() =>{
 
                     </div>
                     <button type="submit"
-                    className="w-full mt-6 text-lg cursor-pointer bg-blue-500 text-white py-2 rounded-lg">
-                        Xác Nhận OTP
+                    className="w-full mt-6 text-lg cursor-pointer bg-blue-500 text-white py-2 rounded-lg"
+                    disabled={verifyOtpMutation.isPending}
+                    onClick={() => verifyOtpMutation.mutate()}
+                    >
+                        {verifyOtpMutation.isPending ? "Đang xác thực OTP..." : "Xác thực OTP"}
 
                     </button>
                     <p className="text-center text-sm mt-4">
@@ -232,20 +260,29 @@ const resendOtp=() =>{
                         )
                         }
 
-                        
+
                     </p>
+                    {
+                        verifyOtpMutation?.isError &&
+                        verifyOtpMutation.error instanceof AxiosError && (
+                            <p className="text-red-500 text-sm mt-2">
+                                {verifyOtpMutation.error.response?.data?.message ||
+                                verifyOtpMutation.error.message}
+                            </p>
+                        )
+                    }
                 </div>
 
             )}
 
-            
-          
+
+
 
         </div>
 
 
     </div>
-   
+
     </div>
   )
 }

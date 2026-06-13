@@ -6,6 +6,8 @@ import GoogleButton from '../../../shared/widgets/header/components/google-butto
 
 import {useForm} from 'react-hook-form';
 import { Eye, EyeOff } from 'lucide-react';
+import axios, { AxiosError } from 'axios';
+import { useMutation } from '@tanstack/react-query';
 type FormData={
     email: string;
     password: string;
@@ -19,11 +21,28 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const router = useRouter();
     const {register, handleSubmit, formState:{errors}} =  useForm<FormData>();
-    const onSubmit = (data: FormData) =>{
 
+      const loginMutation = useMutation({
+        mutationFn: async (data: FormData) => {
+           const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/api/login-user`,data, {withCredentials: true} );
+           return response.data;
+        },
+        onSuccess:(data) =>{
+          setServerError(null);
+          router.push("/");
+        },
+        onError:(error: AxiosError) =>{
+          const errorMessage=(error.response?.data as {message: string}) ?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";
+          setServerError(errorMessage);
+        }
+      });
+
+    ;
+    const onSubmit = (data: FormData) =>{
+      loginMutation.mutate(data);
     };
 
- 
+
     return (
   <div className="w-full py-10 min-h-[85vh] bg-[#f1f1f1]">
     <h1 className="text-4xl font-Poppins font-semibold text-black text-center">
@@ -67,8 +86,8 @@ const Login = () => {
                           message: "địa chỉ email không hợp lệ"
                         }
                     })
-                } 
-                
+                }
+
                 />
                 {errors.email && (
                     <p className="text-red-500 text-sm">
@@ -87,7 +106,7 @@ const Login = () => {
                               message: "Mật khẩu phải có ít nhất 6 kí tự"
                             }
                         })
-                    } 
+                    }
                     />
                     <button type="button" onClick={() => setPasswordVisible(!passwordVisible)}
                         className="absolute right-3 flex items-center text-gray-500"
@@ -112,19 +131,22 @@ const Login = () => {
                     Quên mật khẩu?
                   </Link>
                 </div>
-                <button type="submit" 
+                <button type="submit"
                 className="w-full text-lg cursor-pointer bg-black text-white py-2 rounded-lg"
-                 >Đăng Nhập</button>
+                  disabled={loginMutation.isPending}
+                 >
+                  {loginMutation?.isPending ? "Đang đăng nhập..." : "Đăng nhập"}
+                 </button>
                  {serverError && <p className="text-red-500 text-sm mt-2 text-center">{serverError}</p>}
-             
+
             </form>
-          
+
 
         </div>
 
 
     </div>
-   
+
     </div>
   )
 }
